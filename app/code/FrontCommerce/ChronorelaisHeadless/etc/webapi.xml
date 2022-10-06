@@ -7,4 +7,14 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+
+    <route method="PUT" url="/V1/carts/mine/chronorelais/:pickup_id">
+        <service class="FrontCommerce\ChronorelaisHeadless\Api\RelayPointManagementInterface" method="setQuoteRelayId"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId">%customer_id%</parameter>
+        </data>
+    </route>
 </routes>

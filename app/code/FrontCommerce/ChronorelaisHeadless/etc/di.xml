@@ -2,4 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="FrontCommerce\ChronorelaisHeadless\Api\RelayPointManagementInterface" type="FrontCommerce\ChronorelaisHeadless\Model\RelayPointManagement"/>
     <preference for="FrontCommerce\ChronorelaisHeadless\Api\Data\RelayPointsResponseInterface" type="FrontCommerce\ChronorelaisHeadless\Model\Data\RelayPointsResponse"/>
+
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="frontcommerce_chronorelais_set_shipping_info" type="FrontCommerce\ChronorelaisHeadless\Plugin\ShippingInformationManagement" sortOrder="5" disabled="false"/>
+    </type>
 </config>

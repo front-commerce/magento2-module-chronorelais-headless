@@ -5,6 +5,8 @@ namespace FrontCommerce\ChronorelaisHeadless\Model;
 use Exception;
 use FrontCommerce\ChronorelaisHeadless\Api\Data\RelayPointsResponseInterface;
 use FrontCommerce\ChronorelaisHeadless\Api\RelayPointManagementInterface;
+use Magento\Checkout\Model\Session;
+use Magento\Quote\Api\CartRepositoryInterface;
 
 class RelayPointManagement implements RelayPointManagementInterface
 {
@@ -12,14 +14,20 @@ class RelayPointManagement implements RelayPointManagementInterface
 
     protected RelayPoint $relayPoint;
     protected RelayPointsResponseInterface $relayPointsResponse;
+    protected Session $session;
+    protected CartRepositoryInterface $cartRepository;
 
     public function __construct(
         RelayPoint                   $relayPoint,
-        RelayPointsResponseInterface $relayPointsResponse
+        RelayPointsResponseInterface $relayPointsResponse,
+        Session                      $session,
+        CartRepositoryInterface      $cartRepository
     )
     {
         $this->relayPoint = $relayPoint;
         $this->relayPointsResponse = $relayPointsResponse;
+        $this->cartRepository = $cartRepository;
+        $this->session = $session;
     }
 
     /**
@@ -83,5 +91,23 @@ class RelayPointManagement implements RelayPointManagementInterface
         if (!isset($shippingAddress['country_id'])) {
             throw new Exception(__('Missing shipping address country_id'));
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setQuoteRelayId(string $customerId, string $pickupId): bool
+    {
+        try {
+            $quote = $this->cartRepository->getActiveForCustomer($customerId);
+        } catch (Exception $e) {
+            throw new Exception(__('Can\'t found the customer quote'));
+        }
+
+        $this->cartRepository->save(
+            $quote->setRelaisId($pickupId)
+        );
+
+        return true;
     }
 }
