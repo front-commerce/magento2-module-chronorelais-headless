@@ -1,0 +1,21 @@
+{
+    "name": "front-commerce/chronorelais-headless",
+    "authors": [
+        {
+            "name": "Front-Commerce",
+            "email": "support@front-commerce.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {
+        "ext-json": "*"
+    },
+    "autoload": {
+        "files": [
+            "app/code/FrontCommerce/ChronorelaisHeadless/registration.php"
+        ],
+        "psr-4": {
+            "FrontCommerce\\ChronorelaisHeadless\\": "app/code/FrontCommerce/ChronorelaisHeadless"
+        }
+    }
+}
