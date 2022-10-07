@@ -23,17 +23,24 @@ class RelayPoint
     /**
      * @throws Exception
      */
-    public function getRelayPoints(string $methodCode, string $postCode, array $shippingAddress): array
+    public function getRelayPoints(
+        string $methodCode,
+        string $postcode,
+        string $countryId,
+        string $city,
+        array  $street
+    ): array
     {
-        $shippingAddress = $this->addressFactory->create()->setData($shippingAddress);
+        $street = implode(' ', $street);
+        $shippingAddress = $this->addressFactory->create();
 
         return $this->helperWebservice->getPointRelaisByAddress(
             $methodCode,
             $shippingAddress
-                ->setData('postcode', $postCode)
-                ->setData('city', $shippingAddress['city'] ?: 'unknown')
-                ->setData('country', $shippingAddress['country_id'] ?: 'unknown')
-                ->setData('street', $shippingAddress['street'] ?: 'unknown')
+                ->setData('postcode', $postcode)
+                ->setData('city', $city ?: 'unknown')
+                ->setData('country', $countryId ?: 'unknown')
+                ->setData('street', $street ?: 'unknown')
         );
     }
 }

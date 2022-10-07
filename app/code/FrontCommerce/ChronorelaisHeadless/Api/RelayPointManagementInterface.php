@@ -5,12 +5,13 @@ namespace FrontCommerce\ChronorelaisHeadless\Api;
 interface RelayPointManagementInterface
 {
     /**
-     * @param string $methodCode
-     * @param string $postCode
-     * @param string[] $shippingAddress
-     * @return \FrontCommerce\ChronorelaisHeadless\Api\Data\RelayPointsResponseInterface[]
+     * @param string $postcode
+     * @param string $countryId
+     * @param string $city
+     * @param string[] $street
+     * @return array[]
      */
-    public function getRelayPoints(string $postCode, array $shippingAddress): array;
+    public function getRelayPoints(string $postcode, string $countryId, string $city = '', array $street = []): array;
 
     /**
      * @param string $customerId

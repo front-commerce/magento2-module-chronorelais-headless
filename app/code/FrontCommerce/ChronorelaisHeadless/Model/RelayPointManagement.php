@@ -3,7 +3,6 @@
 namespace FrontCommerce\ChronorelaisHeadless\Model;
 
 use Exception;
-use FrontCommerce\ChronorelaisHeadless\Api\Data\RelayPointsResponseInterface;
 use FrontCommerce\ChronorelaisHeadless\Api\RelayPointManagementInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -13,19 +12,16 @@ class RelayPointManagement implements RelayPointManagementInterface
     protected const METHOD_CODE = 'chronorelais';
 
     protected RelayPoint $relayPoint;
-    protected RelayPointsResponseInterface $relayPointsResponse;
     protected Session $session;
     protected CartRepositoryInterface $cartRepository;
 
     public function __construct(
-        RelayPoint                   $relayPoint,
-        RelayPointsResponseInterface $relayPointsResponse,
-        Session                      $session,
-        CartRepositoryInterface      $cartRepository
+        RelayPoint              $relayPoint,
+        Session                 $session,
+        CartRepositoryInterface $cartRepository
     )
     {
         $this->relayPoint = $relayPoint;
-        $this->relayPointsResponse = $relayPointsResponse;
         $this->cartRepository = $cartRepository;
         $this->session = $session;
     }
@@ -33,12 +29,10 @@ class RelayPointManagement implements RelayPointManagementInterface
     /**
      * @throws Exception
      */
-    public function getRelayPoints(string $postCode, array $shippingAddress): array
+    public function getRelayPoints(string $postcode, string $countryId, string $city = '', array $street = []): array
     {
-        $this->checkParams($postCode, $shippingAddress);
-
         return $this->formatRelayResponseData(
-            $this->relayPoint->getRelayPoints(self::METHOD_CODE, $postCode, $shippingAddress)
+            $this->relayPoint->getRelayPoints(self::METHOD_CODE, $postcode, $countryId, $city, $street)
         );
     }
 
@@ -49,23 +43,18 @@ class RelayPointManagement implements RelayPointManagementInterface
         }
 
         $result = [];
-        $relayPoints = json_decode(json_encode($relayPoints));
-
         foreach ($relayPoints as $relayPoint) {
-            $relayPoint = json_decode(json_encode($relayPoint));
-
-            $result[] = clone $this->relayPointsResponse
-                ->setStreet1($relayPoint->adresse1)
-                ->setStreet2($relayPoint->adresse2)
-                ->setStreet3($relayPoint->adresse3)
-                ->setLatitude($relayPoint->latitude)
-                ->setLongitude($relayPoint->longitude)
-                ->setZipCode($relayPoint->codePostal)
-                ->setRelayId($relayPoint->identifiantChronopostPointA2PAS)
-                ->setName($relayPoint->nomEnseigne)
-                ->setCity($relayPoint->localite)
-                ->setName($relayPoint->nomEnseigne)
-                ->setOpeningTime([
+            $result[] = [
+                'street1' => $relayPoint->adresse1,
+                'street2' => $relayPoint->adresse2,
+                'street3' => $relayPoint->adresse3,
+                'latitude' => $relayPoint->latitude,
+                'longitude' => $relayPoint->longitude,
+                'zipcode' => $relayPoint->codePostal,
+                'id' => $relayPoint->identifiantChronopostPointA2PAS,
+                'city' => $relayPoint->localite,
+                'name' => $relayPoint->nomEnseigne,
+                'openingTime' => [
                     'Monday' => $relayPoint->horairesOuvertureLundi,
                     'Tuesday' => $relayPoint->horairesOuvertureMardi,
                     'Wednesday' => $relayPoint->horairesOuvertureMercredi,
@@ -73,24 +62,11 @@ class RelayPointManagement implements RelayPointManagementInterface
                     'Friday' => $relayPoint->horairesOuvertureVendredi,
                     'Saturday' => $relayPoint->horairesOuvertureSamedi,
                     'Sunday' => $relayPoint->horairesOuvertureDimanche,
-                ]);
+                ],
+            ];
         }
 
         return $result;
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function checkParams(string $postCode, array $shippingAddress)
-    {
-        if (!$postCode) {
-            throw new Exception(__('Missing post_code'));
-        }
-
-        if (!isset($shippingAddress['country_id'])) {
-            throw new Exception(__('Missing shipping address country_id'));
-        }
     }
 
     /**
