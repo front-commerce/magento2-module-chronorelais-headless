@@ -1,0 +1,19 @@
+{
+    "name": "front-commerce/magento2-module-chronorelais-headless",
+    "type": "magento2-module-chronorelais-headless",
+    "authors": [
+        {
+            "name": "Front-Commerce",
+            "email": "support@front-commerce.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "autoload": {
+        "files": [
+            "app/code/FrontCommerce/ChronorelaisHeadless/registration.php"
+        ],
+        "psr-4": {
+            "FrontCommerce\\ChronorelaisHeadless\\": "app/code/FrontCommerce/ChronorelaisHeadless"
+        }
+    }
+}
