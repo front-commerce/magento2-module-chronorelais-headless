@@ -1,19 +1,28 @@
 {
-    "name": "front-commerce/magento2-module-chronorelais-headless",
-    "type": "magento2-module-chronorelais-headless",
-    "authors": [
-        {
-            "name": "Front-Commerce",
-            "email": "support@front-commerce.com"
-        }
-    ],
-    "minimum-stability": "beta",
-    "autoload": {
-        "files": [
-            "app/code/FrontCommerce/ChronorelaisHeadless/registration.php"
-        ],
-        "psr-4": {
-            "FrontCommerce\\ChronorelaisHeadless\\": "app/code/FrontCommerce/ChronorelaisHeadless"
-        }
+  "name": "front-commerce-magento/module-headless-chronorelais",
+  "description": "Headless integration for ChronoRelais shipping method in Magento",
+  "type": "magento2-module",
+  "version": "0.1.0",
+  "require": {
+    "php": "~7.3",
+    "ext-json": "*",
+    "magento/magento-composer-installer": "*"
+  },
+  "authors": [
+    {
+      "name": "Front-Commerce",
+      "email": "support@front-commerce.com"
     }
+  ],
+  "license": [
+    "MIT"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "FrontCommerce\\ChronorelaisHeadless\\": ""
+    }
+  }
 }
